@@ -1,0 +1,48 @@
+class Donador
+{
+    private string nombre;
+    private string apellidoP;
+    private string apellidoM;
+    private int edad;
+    private char sexo;
+    private DateTime fechaN;
+    private DateTime fechaD;
+    private string estadoCivil;
+    private bool discapacidad;
+    private double ingresoM;
+    private string correoE;
+
+    //Metodo constructor
+    public Donador(string nombre, string apellidoP, string apellidoM, int edad, char sexo)
+    {
+        this.nombre = nombre;
+        this.apellidoP = apellidoP;
+        this.apellidoM = apellidoM;
+        this.edad = edad;
+        this.sexo = sexo;
+        
+    }
+    //Metodos SET
+    public void setFechaN(DateTime fechaN) { this.fechaN = fechaN; }
+    public void setFechaD(DateTime fechaD) { this.fechaD = fechaD; }
+    public void setEstadoCivil(string EstadoCivil) { this.estadoCivil = EstadoCivil; }
+    public void setDiscapacidad(bool discapacidad) { this.discapacidad = discapacidad; }
+    public void setIngresoM(double ingresoM) { this.ingresoM = ingresoM; }
+    public void setCorreoE(string correoE) { this.correoE = correoE; }
+
+    //Metodos
+    public void calProxDonacion(DateTime fechaD)
+    {
+        DateTime proxDonacion = fechaD.AddDays(30);
+        System.Console.WriteLine("\tLa fecha de proxima donacion es:", proxDonacion);
+    }
+    public void calEdad(DateTime fechaN)
+    {
+        
+    }
+    public void calReembolso()
+    {
+
+    }
+}
+

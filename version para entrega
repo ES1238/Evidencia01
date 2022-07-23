@@ -1,0 +1,156 @@
+class Donador
+{
+    private string nombre;
+    private string apellidoP;
+    private string apellidoM;   
+    private char sexo;
+    private DateTime fechaN;
+    private DateTime fechaD;  
+    private string estadoCivil;
+    private bool discapacidad;
+    private double ingresoM;
+    private string correoE;
+    //Atributos que se calculan
+    private int edad;
+    private DateTime fechaPD; //fecha de proxima donacion
+    private DateTime horaEjercicio;
+    private double reembolso;
+    private string folio;
+
+    //Metodo constructor
+    public Donador(string nombre, string apellidoP, string apellidoM, char sexo)
+    {
+        this.nombre = nombre;
+        this.apellidoP = apellidoP;
+        this.apellidoM = apellidoM;
+        this.sexo = sexo;
+        
+    }
+    //Metodos SET
+    public void setFechaN(DateTime fechaN) { this.fechaN = fechaN; }
+    public void setFechaD(DateTime fechaD) { this.fechaD = fechaD; }
+    public void setEstadoCivil(string EstadoCivil) { this.estadoCivil = EstadoCivil; }
+    public void setDiscapacidad(bool discapacidad) { this.discapacidad = discapacidad; }
+    public void setIngresoM(double ingresoM) { this.ingresoM = ingresoM; }
+    public void setCorreoE(string correoE) { this.correoE = correoE; }
+
+    //Metodos de calculos
+    public void calProxDonacion()
+    {
+        fechaPD = fechaD.AddDays(30.0);
+    }
+    public void calEdad() //solo se toma en cuenta el año
+    {
+        edad = DateTime.Now.Year - fechaN.Year;
+    }
+    public void calReembolso()
+    {
+        reembolso = ingresoM * 0.015;
+    }
+    public void generarFolio()
+    {
+        // segunda letra del nombre, primera letra de apellidoP, tercera letra apellidoM,
+        // numero aleatorio de 1000 a 9999 y letra aleatoria
+        Random rd = new Random();
+        int num = rd.Next(1000, 9999);
+        int letra = rd.Next(65, 90);
+        folio = nombre.Substring(1,1)+ apellidoP.Substring(0,1)+ apellidoM.Substring(2,1)
+            + num.ToString() + ((char)letra);
+    }
+    public void calHoraEjercicio()
+    {
+        horaEjercicio = fechaD.AddHours(8);
+    }
+    public void imprimirFicha()
+    {
+        System.Console.WriteLine("-------------------FICHA DONADOR------------------------");
+        System.Console.WriteLine("Folio: {0}", folio);
+        System.Console.WriteLine("Nombre: {0} {1} {2}", nombre, apellidoP, apellidoM);
+        System.Console.WriteLine("Sexo: {0}", sexo);
+        System.Console.WriteLine("Fecha de Nacimiento: {0}/{1}/{2}", fechaN.Day, fechaN.Month, fechaN.Year);
+        System.Console.WriteLine("Edad: {0} años", edad);
+        System.Console.WriteLine("Discapacidad: {0}", discapacidad);
+        System.Console.WriteLine("Ingreso mensual ${0:N2}", ingresoM);
+        System.Console.WriteLine("Correo electronico: {0}", correoE);
+        System.Console.WriteLine("-----------------DATOS DE LA DONACION--------------------");
+        System.Console.WriteLine("Fecha de donacion: {0}", fechaD);
+        System.Console.WriteLine("Fecha proxima donacion: {0}", fechaPD);
+        //fomato de hora de ejercicio 00:00, por comparacion
+        if(horaEjercicio.Hour <=9 & horaEjercicio.Minute >9)
+            System.Console.WriteLine("Hora para hacer ejercicio: 0{0}:{1} hrs.", horaEjercicio.Hour, horaEjercicio.Minute);
+        if (horaEjercicio.Hour > 9 & horaEjercicio.Minute <= 9)
+            System.Console.WriteLine("Hora para hacer ejercicio: {0}:0{1} hrs.", horaEjercicio.Hour, horaEjercicio.Minute);
+        if (horaEjercicio.Hour <= 9 & horaEjercicio.Minute <= 9)
+            System.Console.WriteLine("Hora para hacer ejercicio: 0{0}:{1} hrs.", horaEjercicio.Hour, horaEjercicio.Minute);
+        if (horaEjercicio.Hour > 9 & horaEjercicio.Minute > 9)
+            System.Console.WriteLine("Hora para hacer ejercicio: {0}:{1} hrs.", horaEjercicio.Hour, horaEjercicio.Minute);
+        System.Console.WriteLine("Reembolso: ${0:N2}", reembolso);
+
+    }
+    
+    public void guardarDatos()
+    {
+        string path = "C:\\Users\\Ana\\Desktop\\ProgramacionNet\\EA_Unidad1\\archivo.txt";
+        string info = folio + "," + nombre + "," + apellidoP + "," + apellidoM + "," + sexo.ToString() + "," 
+            + fechaN.Date.ToString() + "," + edad.ToString() + ","
+            + estadoCivil + "," + discapacidad.ToString() + "," + ingresoM.ToString() + "," + correoE + ","
+            + fechaD.ToString() + "," + fechaPD.ToString() + "," + horaEjercicio.Hour.ToString() + ":" 
+            + horaEjercicio.Minute.ToString() + "," + reembolso.ToString()+ "\n";
+       //agrega informacion de nuevos usuarios al archivo
+        File.AppendAllText(path, info);
+    }
+}
+class Test
+{
+    public static void Main(string[] args)
+    {
+        string nombre, apellidoP, apellidoM;
+        char sexo;
+
+        System.Console.WriteLine(">> INFORMACION DONADOR <<");
+        System.Console.WriteLine("Nombre: ");
+        nombre = Console.ReadLine();
+        System.Console.WriteLine("Apellido paterno: ");
+        apellidoP = Console.ReadLine();
+        System.Console.WriteLine("Apellido materno: ");
+        apellidoM = Console.ReadLine();
+        System.Console.WriteLine("Sexo (M)/(F): ");
+        //conversion de cadena a caracter
+        sexo = Convert.ToChar(Console.ReadLine());
+        //Crear objeto Donador
+        Donador don = new Donador(nombre, apellidoP, apellidoM, sexo);
+
+        System.Console.WriteLine("Fecha de nacimiento (DD/MM/AAAA) : "); //"22/10/2015 12:10:15 PM"
+        string fecha = Console.ReadLine();
+        fecha = fecha + " 12:00:00 PM"; //se agrega la hora por formato de dato DateTime
+        don.setFechaN(Convert.ToDateTime(fecha));
+        System.Console.WriteLine("Estado civil: ");
+        // se envia el string, metodo set
+        don.setEstadoCivil(Console.ReadLine());
+        System.Console.WriteLine("¿Tiene alguna discapacidad?: S/N ");
+        string d = Console.ReadLine();
+        //Se evalua lo ingresado por el usuario
+        if (d.Equals("S"))
+            don.setDiscapacidad(true);
+        else
+            don.setDiscapacidad(false);
+        System.Console.WriteLine("Ingreso mensual: ");
+        //Se convierte el string a double
+        don.setIngresoM(Convert.ToDouble(Console.ReadLine()));
+        System.Console.WriteLine("Correo electronico: ");
+        don.setCorreoE(Console.ReadLine());
+        //la fecha de donacion la asigna el sistema
+        don.setFechaD(DateTime.Now);
+
+        //Valores que se calculan
+        don.calEdad();
+        don.calProxDonacion();
+        don.calHoraEjercicio();
+        don.calReembolso();
+        don.generarFolio();
+
+        //Salida de informacion
+        don.imprimirFicha();
+        don.guardarDatos();
+    }
+}
